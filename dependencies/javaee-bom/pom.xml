@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.bobkubista.parent-pom</groupId>
@@ -8,7 +9,7 @@
   <groupId>com.bobkubista.parent-pom.dependencies</groupId>
   <artifactId>javaee-bom</artifactId>
   <packaging>pom</packaging>
-  
+
   <properties>
     <myfaces.version>2.2.9</myfaces.version>
     <hibernate-validator.version>5.2.2.Final</hibernate-validator.version>
@@ -82,6 +83,12 @@
       </dependency>
 
       <!-- EL -->
+      <dependency>
+        <groupId>javax.el</groupId>
+        <artifactId>javax.el-api</artifactId>
+        <version>3.0.1-b04</version>
+      </dependency>
+
 
       <!-- JTA -->
 

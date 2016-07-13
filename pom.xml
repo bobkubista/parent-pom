@@ -64,9 +64,7 @@
                 <pluginExecution>
                   <pluginExecutionFilter>
                     <groupId>org.jacoco</groupId>
-                    <artifactId>
-                      jacoco-maven-plugin
-                    </artifactId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
                     <versionRange>
                       [0.7.5.201505241946,)
                     </versionRange>
@@ -74,8 +72,6 @@
                       <goal>prepare-agent</goal>
                     </goals>
                   </pluginExecutionFilter>
-                  <action>
-                  </action>
                 </pluginExecution>
               </pluginExecutions>
             </lifecycleMappingMetadata>

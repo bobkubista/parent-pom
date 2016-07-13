@@ -32,7 +32,10 @@
   </distributionManagement>
 
   <scm>
-    <url>https://github.com/bobkubista/examples.git</url>
+    <connection>scm:git:git@github.com/bobkubista/parent-pom.git</connection>
+    <url>scm:git:git@github.com/bobkubista/parent-pom.git</url>
+    <developerConnection>scm:git:git@github.com/bobkubista/parent-pom.git</developerConnection>
+    <tag>HEAD</tag>
   </scm>
 
   <profiles>

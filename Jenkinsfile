@@ -1,18 +1,25 @@
+#!groovy
 // TODO build parameters
 // TODO maybe tar the source and archive source
+try{
     checkout()
     validate()
-	nexus()
-	release()
+    sonar()
+    nexus()
+    release()
+} catch(Exception ex) {
+	currentBuild.result = 'FAILED'
+	//mail()
+	throw ex
+}
 
 def checkout() {
 	stage 'checkout, merge and compile'
-	node('master') {
-	    // git with submodules
-	    git url: 'https://github.com/bobkubista/parent-pom.git', branch: 'master'
-	    compile()
+	node {
+		checkout([$class: 'GitSCM', branches: [[name: '*']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '15e8261d-cf9d-4d33-ae9e-04d7d33c851d', url: 'https://github.com/bobkubista/examples.git']]])	    
+		compile()
 	    step([$class: 'ArtifactArchiver', artifacts: '**/target/*.?ar', fingerprint: true])
-	    stash includes: '*', name: 'buildStash'
+	    stash includes: '*', name: 'source'
 	}
 }
 
@@ -20,7 +27,7 @@ def checkout() {
  * Deploy maven on slave if needed and add it to the path
  */
 def ensureMaven() {
-	env.Path = "${tool 'M3'}/bin:${env.PATH}"
+	tool name: 'Maven', type: 'maven'
 }
 
 def version() {
@@ -36,8 +43,8 @@ def compile() {
 
 def validate() {
 	stage 'unit testing'
-	node('master') {
-	    unstash 'buildStash'
+	node {
+	    unstash 'source'
 	    ensureMaven()
 	    // validate
 	    sh "mvn -B -T 1C validate -am"
@@ -45,41 +52,45 @@ def validate() {
 }
 
 def test() {
-	node('master') {
-	    unstash 'buildStash'
+	node {
+	    unstash 'source'
 	    ensureMaven()
 	    // TODO splitTests
-	    sh "mvn -B -T 1C test -P test -am"
+	    sh "mvn test -Ptest -e -X"
 	    step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/*.xml'])
-	    stash includes: '*', name: 'testStash'
+	    stash includes: '*', name: 'source'
 	}
 }
 
-def itTesT() {stage 'integration testing'
-	node('master') {
-	    unstash 'testStash'
+def itTest() {
+	node {
+	    unstash 'source'
 	    ensureMaven()
 	    retry(count:2 ) { sh "mvn -B integration-test -P integration-test -am" }
 	    // archive test results
 	    step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/*.xml'])
+	    stash includes: '*', name: 'source'
 	    echo 'Finished Integration tests'
 	}
 }
 
 def deploy() {
 stage name: 'performance and front-end tests', concurrency: 1
-	node('master') {
-	    ensureMaven()
+	timeout(time:1, unit:'HOURS') {
+	    input 'Do you approve release candidate?'
+	}
+	node {
+	ensureMaven()
         // deploy to test, should eventually be build docker image and run
         sh "mvn -T 1C -f services/rest-services/spring-services/user/user-service/pom.xml cargo:undeploy cargo:deploy -X "
-        sh "mvn -T 1C -f services/rest-services/spring-services/todo/todo-rest-service/pom.xml cargo:undeploy cargo:deploy -X "
-        sh "mvn -T 1C -f services/rest-services/cdi-services/email/email-cdi-service/pom.xml cargo:undeploy cargo:deploy -X "
+        // sh "mvn -T 1C -f services/rest-services/spring-services/todo/todo-rest-service/pom.xml cargo:undeploy cargo:deploy -X "
+        // sh "mvn -T 1C -f services/rest-services/cdi-services/email/email-cdi-service/pom.xml cargo:undeploy cargo:deploy -X "
         sh "mvn -T 1C -f services/rest-services/cdi-services/datagathering/datagathering-rest-service/pom.xml cargo:undeploy cargo:deploy -X "
 	}
 }
 
 def performanceTest() {
-	node('master') {
+	node {
 	    // jmeter
 	    ensureMaven()
 	    sh 'mvn verify -P performance-test -T 1C -am'
@@ -89,12 +100,13 @@ def performanceTest() {
 	        // TODO front end tests
 	        // TODO archive test results
 	    }
+	    stash includes: '*', name: 'source'
     }
 }
 
 def sonar() {
 	stage name: 'Quality', concurrency: 3
-	node('master') {
+	node {
 	    ensureMaven()
 	    // sonarqube
 	    sh 'mvn sonar:sonar -P sonar -am -T 1C '
@@ -102,14 +114,12 @@ def sonar() {
 }
 
 def mail() {
-    // TODO mail
-    // emailext attachLog: 'true', subject: '', body: ''
-    // mail bcc: '', body: '', cc: '', charset: '', from: '', mimeType: '', replyTo: '', subject: '', to: ''
+	mail to: '<to>', subject: '<subject>', body: '<body>', attachLog: true
 }
 
 def nexus() {
 	stage name: 'archive'
-	node('master') {
+	node {
 	    // nexus
 	    ensureMaven()
 	    sh 'mvn deploy -T 1C -am'
@@ -117,10 +127,17 @@ def nexus() {
 }
 
 def release() {
-	stage name: 'release'
-	node('master') {
-	// TODO Release
-	// TODO ask user if we can release
-	sh 'mvn release:prepare -Ddryrun=true -T 1C -am -X -e'
+	if (env.BRANCH_NAME == "master") {
+	    stage name: 'release'
+	    timeout(time:5, unit:'DAYS') {
+	    	input 'Do you approve release candidate?'
+	    }
+	    node {
+	        // TODO Release
+	        // TODO ask user if we can release
+		sh 'mvn -T 1C -am -e -X release:prepare'
+	        sh 'mvn -T 1C -am -DdryRun=true -e -X release:perform'
+	    }
+	
 	}
 }

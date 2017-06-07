@@ -33,9 +33,9 @@
 	</distributionManagement>
 
 	<scm>
-		<connection>scm:git:ssh://github.com/bobkubista/parent-pom.git</connection>
-		<url>scm:git:ssh://github.com/bobkubista/parent-pom.git</url>
-		<developerConnection>scm:git:ssh://github.com/bobkubista/parent-pom.git</developerConnection>
+		<connection>scm:git:https://github.com/bobkubista/parent-pom.git</connection>
+		<url>scm:git:https://github.com/bobkubista/parent-pom.git</url>
+		<developerConnection>scm:git:https://github.com/bobkubista/parent-pom.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 

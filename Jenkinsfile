@@ -16,7 +16,7 @@ try{
 def checkout() {
 	stage 'checkout, merge and compile'
 	node {
-		checkout([$class: 'GitSCM', branches: [[name: '*']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '15e8261d-cf9d-4d33-ae9e-04d7d33c851d', url: 'https://github.com/bobkubista/examples.git']]])	    
+		checkout([$class: 'GitSCM', branches: [[name: '*']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '15e8261d-cf9d-4d33-ae9e-04d7d33c851d', url: 'https://github.com/bobkubista/parent-pom.git']]])	    
 		compile()
 	    step([$class: 'ArtifactArchiver', artifacts: '**/target/*.?ar', fingerprint: true])
 	    stash includes: '*', name: 'source'

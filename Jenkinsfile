@@ -1,7 +1,6 @@
 #!groovy
 // TODO build parameters
 // TODO maybe tar the source and archive source
-try{
     checkout()
     validate()
     sonar()
@@ -9,11 +8,6 @@ try{
     currentBuild.result = 'SUCCESS'
     release()
     currentBuild.result = 'SUCCESS'
-} catch(Exception ex) {
-	currentBuild.result = 'FAILED'
-	//mail()
-	throw ex
-}
 
 def checkout() {
 	stage 'checkout, merge and compile'

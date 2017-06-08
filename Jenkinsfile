@@ -8,7 +8,6 @@ try{
     nexus()
     release()
 } catch(Exception ex) {
-	currentBuild.result = 'FAILED'
 	//mail()
 	throw ex
 }

@@ -134,10 +134,11 @@ def release() {
 	    }
 	    node {
 	        // TODO Release
+	        // TODO ask user if we can release
 	        echo 'prepare release'
 			sh 'mvn -e -X release:prepare'
 			echo 'perform release'
-	        sh 'mvn -e -X release:perform'
+	        sh 'mvn -DdryRun=true -e -X release:perform'
 	    }
 	
 	}

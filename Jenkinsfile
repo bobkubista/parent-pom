@@ -5,9 +5,7 @@
     validate()
     sonar()
     nexus()
-    currentBuild.result = 'SUCCESS'
     release()
-    currentBuild.result = 'SUCCESS'
 
 def checkout() {
 	stage 'checkout, merge and compile'

@@ -7,7 +7,9 @@ try{
     sonar()
     nexus()
     release()
+    currentBuild.result = 'SUCCES'
 } catch(Exception ex) {
+	currentBuild.result = 'FAILED'
 	//mail()
 	throw ex
 }

@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.bobkubista</groupId>
 	<artifactId>parent-pom</artifactId>
-	<version>0.0.7-SNAPSHOT</version>
+	<version>0.0.7</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -34,7 +34,7 @@
 		<connection>scm:git:git@github.com:bobkubista/parent-pom.git</connection>
 		<url>scm:git:git@github.com:bobkubista/parent-pom.git</url>
 		<developerConnection>scm:git:git@github.com:bobkubista/parent-pom.git</developerConnection>
-	  <tag>HEAD</tag>
+	  <tag>parent-pom-0.0.7</tag>
   </scm>
 
 	<profiles>

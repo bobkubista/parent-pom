@@ -3,7 +3,6 @@
 // TODO maybe tar the source and archive source
     checkout()
     validate()
-    test()
     sonar()
     nexus()
     currentBuild.result = 'SUCCESS'

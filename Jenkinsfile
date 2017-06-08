@@ -137,7 +137,7 @@ def release() {
 	        echo 'prepare release'
 			sh 'mvn -e -X release:clean release:prepare'
 			echo 'perform release'
-	        sh 'mvn -DdryRun=true -e -X release:perform'
+	        sh 'mvn -e -X release:perform'
 	    }
 	
 	}

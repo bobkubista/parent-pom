@@ -136,7 +136,7 @@ def release() {
 	        // TODO Release
 	        // TODO ask user if we can release
 	        echo 'prepare release'
-			sh 'mvn -e -X release:prepare'
+			sh 'mvn -e -X release:clean release:prepare'
 			echo 'perform release'
 	        sh 'mvn -DdryRun=true -e -X release:perform'
 	    }

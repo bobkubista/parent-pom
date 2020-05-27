@@ -36,7 +36,7 @@
 		<repository>
 			<id>snapshots</id>
 			<name>Snapshots</name>
-			<url>http://192.168.1.125:32812/repository/maven-snapshots/</url>
+			<url>http://nexus.internal.bobkubista.com:32812/repository/maven-snapshots/</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
